@@ -13,7 +13,8 @@ pipeline {
 
     stages {
         stage ('Configure') {
-            script {
+            steps {
+                script {
 sh
 '''
 cat <<EOF >./Dockerfile
@@ -108,6 +109,7 @@ RUN mkdir -p $HOME && \
 CMD ["chromium --no-sandbox", "/tests"]
 EOF
 '''
+                }
             }
         }
 
