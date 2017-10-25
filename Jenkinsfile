@@ -13,10 +13,9 @@ pipeline {
 
     stages {
         stage ('Configure') {
-            node {
-
-                    writeFile file: "Dockerfile", text: 
-'''
+            script {
+                docker.image('node:8.2.1').inside {
+cat <<EOF >./Dockerfile
 FROM mhart/alpine-node:8.1
 
 WORKDIR /src
@@ -32,10 +31,9 @@ RUN apk add --no-cache bash git openssh python make gcc g++ && \
 CMD ["npm", "start"]
 
 EXPOSE 3000
-'''
+EOF
 
-                    writeFile file: "commit.jenkinsfile", text: 
-'''
+cat <<EOF >./commit.jenkinsfile
 pipeline {
     agent { docker 'node:8.2.1' }
     parameters {
@@ -61,10 +59,9 @@ pipeline {
         }
     }
 }
-'''
+EOF
 
-                    writeFile file: "docker-compose.test.yml", text: 
-'''
+cat <<EOF >./docker-compose.test.yml
 version: '3'
 services:
   hackernews:
@@ -84,23 +81,20 @@ services:
       - hackernews
     environment:
       - HACKERNEWS_HOST=hackernews
-'''
+EOF
 
-                    writeFile file: "docker-compose.yml", text: 
-'''
+cat <<EOF >./docker-compose.yml
 version: '3'
 services:
   hackernews:
     build: .
-'''
+EOF
 
-                    writeFile file: "docker-registry-name", text: 
-'''
+cat <<EOF >./docker-registry-name
 hackernews
-'''
+EOF
 
-                    writeFile file: "tests/testcafe.dockerfile", text: 
-'''
+cat <<EOF >./tests/testcafe.dockerfilecat <<EOF >./
 FROM testcafe/testcafe
 
 USER root
@@ -111,7 +105,8 @@ RUN mkdir -p $HOME && \
     npm i chai isomorphic-fetch uuid
 
 CMD ["chromium --no-sandbox", "/tests"]
-'''
+EOF
+                }
             }
         }
 
