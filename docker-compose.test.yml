@@ -4,8 +4,6 @@ services:
     command:
       - node
       - ./dist/server/server.js
-    env_file:
-      - test.list
 
   testcafe:
     build:
