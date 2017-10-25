@@ -83,7 +83,7 @@ pipeline {
 
         stage('Push image') {
             when {
-                branch 'master'
+                branch 'feature/jenkins'
                 not { expression { return params.RESOLVE_CHECK } }
             }
             steps {
@@ -97,7 +97,7 @@ pipeline {
 
         stage('Deploy') {
             when {
-                branch 'master'
+                branch 'feature/jenkins'
                 not { expression { return params.RESOLVE_CHECK } }
             }
             steps {
