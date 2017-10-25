@@ -22,24 +22,6 @@ pipeline {
             }
         }
 
-        stage ('Change resolve version') {
-            when {
-                expression { return params.RESOLVE_CHECK }
-            }
-            steps {
-                script {
-                    docker.image('node:8.2.1').inside {
-                         withCredentials([
-                            string(credentialsId: 'LOCAL_NPM_HOST_PORT', variable: 'NPM_ADDR')
-                        ]) {
-                            sh "npm config set registry http://${env.NPM_ADDR}"
-                            sh "/var/scripts/change_resolve_version.js ${params.NPM_CANARY_VERSION}"
-                        }
-                    }
-                }
-            }
-        }
-
         stage('Unit test') {
             steps {
                 script {
