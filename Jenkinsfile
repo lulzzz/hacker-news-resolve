@@ -113,7 +113,6 @@ RUN mkdir -p $HOME && \
 
 CMD ["chromium --no-sandbox", "/tests"]
 '''
-                    }
                 }
             }
         }
