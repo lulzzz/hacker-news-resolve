@@ -2,8 +2,8 @@ version: '3'
 services:
   hackernews:
     command:
-      - node
-      - ./dist/server/server.js
+      - npm
+      - start
 
   testcafe:
     build:
