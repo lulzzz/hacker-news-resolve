@@ -14,6 +14,8 @@ pipeline {
     stages {
         stage ('Configure') {
             script {
+sh
+'''
 cat <<EOF >./Dockerfile
 FROM mhart/alpine-node:8.1
 
@@ -105,6 +107,7 @@ RUN mkdir -p $HOME && \
 
 CMD ["chromium --no-sandbox", "/tests"]
 EOF
+'''
             }
         }
 
