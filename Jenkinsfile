@@ -12,13 +12,10 @@ pipeline {
     }
 
     stages {
-        stage ('Configure') {
+        stage ('Set up files') {
             steps {
-                node {
-
-                    writeFile file: "Dockerfile", text: 
-'''
-FROM mhart/alpine-node:8.1
+                sh 'cat <<EOF >./Dockerfile
+                FROM mhart/alpine-node:8.1
 
 WORKDIR /src
 ADD . .
@@ -33,87 +30,7 @@ RUN apk add --no-cache bash git openssh python make gcc g++ && \
 CMD ["npm", "start"]
 
 EXPOSE 3000
-'''
-
-                    writeFile file: "commit.jenkinsfile", text: 
-'''
-pipeline {
-    agent { docker 'node:8.2.1' }
-    parameters {
-        string(name: 'NPM_CANARY_VERSION')
-    }
-    stages {
-        stage('Change and commit') {
-            steps {
-                script {
-                    sh "/var/scripts/change_resolve_version.js ${params.NPM_CANARY_VERSION}"
-                    withCredentials([
-                        usernameColonPassword(credentialsId: 'DXROBOT_GITHUB', variable: 'CREDS')
-                    ]) {
-                        sh "/var/scripts/commit_changes.sh ${CREDS} ${params.NPM_CANARY_VERSION}"
-                    }
-                }
-            }
-        }
-    }
-    post {
-        always {
-            deleteDir()
-        }
-    }
-}
-'''
-
-                    writeFile file: "docker-compose.test.yml", text: 
-'''
-version: '3'
-services:
-  hackernews:
-    command:
-      - npm
-      - start
-    environment:
-      - IS_TEST=true
-
-  testcafe:
-    build:
-      context: ./tests
-      dockerfile: testcafe.dockerfile
-    links:
-      - hackernews
-    depends_on:
-      - hackernews
-    environment:
-      - HACKERNEWS_HOST=hackernews
-'''
-
-                    writeFile file: "docker-compose.yml", text: 
-'''
-version: '3'
-services:
-  hackernews:
-    build: .
-'''
-
-                    writeFile file: "docker-registry-name", text: 
-'''
-hackernews
-'''
-
-                    writeFile file: "tests/testcafe.dockerfile", text: 
-'''
-FROM testcafe/testcafe
-
-USER root
-COPY ./functional ./tests
-
-RUN mkdir -p $HOME && \
-    cd ./tests/ && \
-    npm i chai isomorphic-fetch uuid
-
-CMD ["chromium --no-sandbox", "/tests"]
-'''
-                }
+EOF'
             }
         }
 
