@@ -4,6 +4,8 @@ services:
     command:
       - npm
       - start
+    environment:
+      - IS_TEST=true
 
   testcafe:
     build:
