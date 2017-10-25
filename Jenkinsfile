@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage ('Set up files') {
             steps {
-                sh 'cat <<EOF >./Dockerfile
+                sh """cat <<EOF >./Dockerfile
                 FROM mhart/alpine-node:8.1
 
 WORKDIR /src
@@ -30,7 +30,7 @@ RUN apk add --no-cache bash git openssh python make gcc g++ && \
 CMD ["npm", "start"]
 
 EXPOSE 3000
-EOF'
+EOF"""
             }
         }
 
