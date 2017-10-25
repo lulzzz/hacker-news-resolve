@@ -45,6 +45,7 @@ pipeline {
                 script {
                     docker.image('node:8.2.1').inside {
                         sh 'npm test'
+                        sh 'npm run flow'
                     }
                 }
             }
