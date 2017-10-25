@@ -1,0 +1,17 @@
+version: '3'
+services:
+  hackernews:
+    command:
+      - node
+      - ./dist/server/server.js
+    env_file:
+      - test.list
+
+  testcafe:
+    build:
+      context: ./tests
+      dockerfile: testcafe.dockerfile
+    links:
+      - hackernews
+    depends_on:
+      - hackernews
