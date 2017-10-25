@@ -15,7 +15,7 @@ pipeline {
         stage ('Set up files') {
             steps {
 
-                    writeFile file: "Dockerfile", text: 
+                    writeFile file: "Dockerfile", text:
 '''
 FROM mhart/alpine-node:8.1
 
@@ -34,7 +34,7 @@ CMD ["npm", "start"]
 EXPOSE 3000
 '''
 
-                    writeFile file: "commit.jenkinsfile", text: 
+                    writeFile file: "commit.jenkinsfile", text:
 '''
 pipeline {
     agent { docker 'node:8.2.1' }
@@ -63,7 +63,7 @@ pipeline {
 }
 '''
 
-                    writeFile file: "docker-compose.test.yml", text: 
+                    writeFile file: "docker-compose.test.yml", text:
 '''
 version: '3'
 services:
@@ -86,7 +86,7 @@ services:
       - HACKERNEWS_HOST=hackernews
 '''
 
-                    writeFile file: "docker-compose.yml", text: 
+                    writeFile file: "docker-compose.yml", text:
 '''
 version: '3'
 services:
@@ -94,12 +94,10 @@ services:
     build: .
 '''
 
-                    writeFile file: "docker-registry-name", text: 
-'''
-hackernews
-'''
+                    writeFile file: "docker-registry-name", text:
+'''hackernews'''
 
-                    writeFile file: "tests/testcafe.dockerfile", text: 
+                    writeFile file: "tests/testcafe.dockerfile", text:
 '''
 FROM testcafe/testcafe
 
